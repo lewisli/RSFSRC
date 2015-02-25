@@ -3,20 +3,30 @@ sys.path.append('../../framework')
 import bldutil
 
 progs = '''
-emd fxdecon snr2
+dispelem diff mulawefd2d emd norm blend xcorr matoper lesolver pclipc2
+dwtdenoise trisolver symposolver seiscut seisthr Testsolver
+Testsolver1 trapepass lagrange heatexplitest heatimplitest hyperdif
+zerotrace hilbert cdivdir cabs cemd1 cemd2 snr2 snr3 preerror
+threshold1 tsmf fxdecon simidenoise bin2rsf rsf2bin halfthr hradon
+suplane simidenoise1 rmtrace prekirch psmig pocssemb afd2d
+prekirchsr simpostkirch presr nlm1 nlm2 dblendseis svmf genshotscyk 
+afd2domp low addtrace matlr
 '''
+ccprogs = 'diffcxx'
 
-ccprogs = ''
+# mutter3
 
-mpiprogs=''
+mpiprogs='petsctest'
 
 tprogs='''
-clapack cblas eno1 eno2 eno3 spline
+clapack cblas csolver eno1 eno2 eno3 spline fft2
 '''
+pyprogs='''
+pyran
+'''
+pymods='''
 
-pyprogs=''
-
-pymods=''
+'''
 
 docs = []
 

@@ -5,6 +5,11 @@ __pycache__/
 # C extensions
 *.so
 
+#C++ API
+*.o
+*.consign
+*.a
+
 # Distribution / packaging
 .Python
 #env/

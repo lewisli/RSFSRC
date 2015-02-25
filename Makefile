@@ -1,4 +1,4 @@
-SCONS = RSFROOT=/Volumes/Communal/OSX/code-dev/RSF PYTHONPATH=/Volumes/Communal/OSX/code-dev/RSF/lib/python2.7/site-packages:/Users/lewisli/code-dev/RSF/lib/python2.7/site-packages:/Users/lewisli/code-dev/madagascar-1.6.5/book/Recipes:/Users/lewisli/code-dev/madagascar-1.6.5/book /Users/lewisli/code-dev/RSF/bin/scons
+SCONS = RSFROOT=/home/lewisli/code-dev/RSF PYTHONPATH=/home/lewisli/code-dev/RSF/lib/python2.7/site-packages:/home/lewisli/code-dev/RSF/lib/python2.7/site-packages /home/lewisli/code-dev/RSF/bin/scons
 
 all:
 	$(SCONS)
