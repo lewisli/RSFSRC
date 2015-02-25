@@ -1,10 +1,10 @@
 #!/bin/csh
 
 # Path for Madagascar installation directory
-setenv RSFROOT /Users/lewisli/code-dev/RSF
+setenv RSFROOT /Volumes/Communal/OSX/code-dev/RSF
 
 # Path for Madagascar source directory
-setenv RSFSRC /Volumes/Communal/OSX/code-dev/madagascar-1.6.5
+setenv RSFSRC /Volumes/Communal/OSX/code-dev/RSFSRC
 
 # Path for Python packages
 if ($?PYTHONPATH) then
@@ -14,7 +14,7 @@ setenv PYTHONPATH $RSFROOT/lib/python2.7/site-packages
 endif
 
 # Path for binary data files part of RSF datasets
-setenv DATAPATH /var/tmp/
+setenv DATAPATH /Volumes/Communal/OSX/tmp/
 
 # Path for manual pages
 setenv MANPATH `manpath`:$RSFROOT/share/man

@@ -94,6 +94,18 @@ def cicmig(icic,sdat,rdat,slow,custom,par):
          %s
          ''' % (param(par)+custom))
 
+# migration with Conventional Imaging Condition split
+def cigmigsplit(icic,sdat,rdat,slow,splitindex,custom,par):
+    Flow(icic,[sdat,rdat,slow],
+         '''
+         weilewis verb=y irun=cic
+         dat=${SOURCES[1]}
+         slo=${SOURCES[2]}
+         splitindex=%d
+         cigsplit=%d
+         %s
+        '''%(splitindex,par['cigsplit'],param(par)+custom))
+
 # ------------------------------------------------------------
 # migration with Extended Imaging Condition
 def eicmig(icic,ieic,sdat,rdat,slow,ccoo,custom,par):

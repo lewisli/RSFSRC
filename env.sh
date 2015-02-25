@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Path for Madagascar installation directory
-export RSFROOT=/Users/lewisli/code-dev/RSF
+export RSFROOT=/Volumes/Communal/OSX/code-dev/RSF
 
 # Path for Madagascar source directory
-export RSFSRC=/Volumes/Communal/OSX/code-dev/madagascar-1.6.5
+export RSFSRC=/Volumes/Communal/OSX/code-dev/RSFSRC
 
 # Path for Python packages
 if [ -n "$PYTHONPATH" ]; then
@@ -14,7 +14,7 @@ export PYTHONPATH=$RSFROOT/lib/python2.7/site-packages
 fi
 
 # Path for binary data files part of RSF datasets
-export DATAPATH=/var/tmp/
+export DATAPATH=/Volumes/Communal/OSX/tmp/
 
 # Path for manual pages
 unset MANPATH

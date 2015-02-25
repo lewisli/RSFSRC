@@ -1,5 +1,5 @@
 ENV = {'PATH': '/opt/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin', 'LD_LIBRARY_PATH': '', 'PATHOSX': '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin', 'HOME': '/Users/lewisli'}
-RSFROOT = '/Users/lewisli/code-dev/RSF'
+RSFROOT = '/Volumes/Communal/OSX/code-dev/RSF'
 AR = 'ar'
 JPEG = None
 OPENGL = []
