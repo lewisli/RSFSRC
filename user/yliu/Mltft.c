@@ -1,4 +1,8 @@
-/* Local time-frequency transform (LTFT). */
+/* Local time-frequency transform (LTFT). 
+
+July 2014 program of the month:
+ahay.org/rsflog/index.php?/archives/396-Program-of-the-month-sfltft.html
+*/
 /*
   Copyright (C) 2010 University of Texas at Austin
   
@@ -279,4 +283,4 @@ int main(int argc, char* argv[])
     exit(0);
 }
 
-/* 	$Id: Mltft.c 12339 2014-05-01 14:43:37Z sfomel $	 */
+/* 	$Id: Mltft.c 12981 2014-07-14 14:28:02Z sfomel $	 */

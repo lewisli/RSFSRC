@@ -3,17 +3,24 @@ sys.path.append('../../framework')
 import bldutil
 
 progs = '''
-abalance angle angle2 bilat2 cdivn chebvc clpf cltft cpef deblur divn
-dix eikonal eikonalvti erf exgr fftexp0 fftexp3 fftwave1 fftwave2
-fftwave3 focus iphase localskew lpf lsfit mffit mig3 nsmooth1 ocparcel
-octentwt ofilp patch phaserot pick plane shapeagc shearer shift1
-simenv similarity smoothreg timefreq twofreq2 velcon warp1 warpadd
-warpscan
+abalance analytical angle angle2 approx arrival bdix bil1 bilat2 blur
+cfftwave1 cdivn cflow chebvc clpf cltft constperm constpermh
+cosftwave1 cpef deblur distance divn dix dpeiko eikonal eikonalvti
+eno2 erf exgr fft2 fftexp0 fftexp1 fftexp3 fftone ffttest fftwave1
+fftwave2 fftwave3 focus fpow freqest gaussmooth gbeamform imray interf
+interp2 interpt iphase kron lfftexp0 localskew locov lpf lsfit median
+mffit mig3 miss3 nconv nsmooth nsmooth1 ocparcel octentwt odip2 ofilp
+ofsemb opwd2 ortho patch phaserot pick pick3 plane poly polyfit regr
+rdiv rect1 reshape riesz rsin semblance shape shapeagc shapefill
+shearer shift1 similarity similarity2 simenv smoothderw smoothreg
+smspray taupfit thin timecont timefreq tomo tree trace2 tristack
+tristack2 twofreq2 var2 velcon velinv vidattr vofzperm warp1 warpadd
+warpscan zero zmarch ztrace
 '''
 
-ccprogs = 'anisolr2 isolr2 isolr3'
+ccprogs = 'anisolr2 isolr2 isolr3 permlr1 permlr2 permlr3'
 
-pyprogs = 'cgi fft results zoom'
+pyprogs = 'cgi fft ipick las2rsf results wxresults zoom'
 pymods = 'conjdir conjgrad dottest steepd'
 
 try:  # distributed version
@@ -26,17 +33,17 @@ except: # local version
 
 src = Glob('[a-z]*.c')
 
-dynpre = env.get('DYNLIB','') 
-
-libs = [dynpre+'rsf']+env.get('LIBS',[])
-dlibs = ['drsf']+env.get('LIBS',[])
-
 env.Prepend(CPPPATH=['../../include'],
             LIBPATH=['../../lib'])
 
 fftw = env.get('FFTW')
 if fftw:
     env.Prepend(CPPDEFINES=['SF_HAS_FFTW'])
+
+dynpre = env.get('DYNLIB','') 
+
+libs = [dynpre+'rsf']+env.get('LIBS',[])
+dlibs = ['drsf']+env.get('LIBS',[])
 
 objects = []
 dobjects = []
@@ -118,7 +125,7 @@ for conv in ('byte2tif','tif2byte'):
     if root:
         env.Install(bindir,prog)
 
-for prog in Split('cburg ntriangle1'):
+for prog in Split('agrid burg cburg grid1 ntriangle1 smspray spray'):
     sources = ['Test' + prog,prog]
     bldutil.depends(env,sources,prog)
     sources = map(lambda x: x + '.o',sources)

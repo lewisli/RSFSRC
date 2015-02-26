@@ -173,8 +173,8 @@ def createPBSfile(name,email,nodes,ppn,time,last,next,tasks,relaunch,run,content
 
     global pbs_dirt
 
-    python27path = '/data/cees/lewisli/python2.7/bin/python'
-    sconspath = '/data/cees/lewisli/scons/scons-2.3.4/bin/scons'
+    
+    
     lines = []
     lines.append('#!/bin/tcsh')
     print 'nodes: ',nodes
@@ -208,7 +208,7 @@ def createPBSfile(name,email,nodes,ppn,time,last,next,tasks,relaunch,run,content
         if relaunch or run:
             lines.append('%s' % content)
         else:
-            lines.append('%s %s -f %s/SConstruct-%s' % (python27path, sconspath, pbs_dirt,name))
+            lines.append('%s -f %s/SConstruct-%s' % ('scons', pbs_dirt,name))
 
     if next == None:
         if not relaunch:

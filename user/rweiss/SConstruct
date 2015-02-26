@@ -28,11 +28,18 @@ if not os.path.exists(MPI_INC + "/mpi.h"):
 
 
 cuda_progs = '''
+adjgradient2d_coupled_gpu
 ewefd2d_gpu
 ewefd3d_gpu_p2p
+wem2d_gpu
+wem3d_gpu
+adjgradient2d_gpu
+ewefd2d_gpu_dev
 '''
 
 cuda_mpi_progs = '''
+ewefd3d_gpu_mpi
+ewefd3d_multiNode
 '''
 
 
@@ -46,7 +53,8 @@ env.Append(LIBS=[env.get('DYNLIB','')+'rsf'],
 
 if CTP:
     env.Append(LIBS=['cudart','cufft','cusparse'],
-               LIBPATH=[os.path.join(CTP,'lib'),os.path.join(CTP,'lib')])
+               LIBPATH=filter(os.path.isdir,[os.path.join(CTP,'lib64'),
+                                             os.path.join(CTP,'lib')]))
 
 cuda_mains = Split(cuda_progs)
 for prog in cuda_mains:

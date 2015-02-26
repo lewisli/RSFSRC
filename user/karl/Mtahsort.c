@@ -17,19 +17,17 @@ and sftahwrite.
 
 EXAMPLE:
 
-sftahread \\
-   verbose=1 \\
-   input=npr3_gathers.rsf \\
-| sftahnmo \\
-   verbose=1  \\
-   tnmo=0,.373,.619,.826,.909,1.017,1.132,1.222,1.716,3.010 \\
-   vnmo=9086,10244,11085,10803,10969,11578,12252,12669,14590,17116 \\
-| sftahstack key=iline,xline verbose=1 \\
+sftahsort               \\
+   verbose=1            \\
+   input=npr3_field.rsf \\
+   sort="iline:100,200,50  +xline:100,140,10 offset" \\
+| sftahmakeskey pkey=iline,xline skey=cdpt verbose=1 \\
 | sftahwrite \\
-   verbose=1                           \\
-   label2="xline" o2=1 n2=188 d2=1   \\
-   label3="iline" o3=1 n3=345 d3=1   \\
-   output=mappedstack.rsf \\
+   verbose=1 \\                          
+   label2="cdpt"  o2=1 n2=50  d2=1    \\
+   label3="xline" o3=100 n3=5 d3=10   \\
+   label4="iline" o4=100 n4=3  d4=50  \\
+   output=mappedfieldsort.rsf         \\
 >/dev/null
 
 sfgrey <mappedstack.rsf | sfpen
@@ -55,6 +53,7 @@ displayed using sfgrey.
 #include <rsfsegy.h>
 
 #include "tahsub.h"
+#include "extraalloc.h"
 
 /* sparingly make some global variables. */
 int verbose;
@@ -94,7 +93,7 @@ int main(int argc, char* argv[])
   int i_trace;
   char* infile_filename=NULL;
   char* headers_filename=NULL;
-  sortkey** myarray_pointers_to_sortkey;
+  sortkey** pntrs_to_sortkeys;
   char* sort;
   char** sortheadernames;
   char** sorttokens1;
@@ -102,12 +101,12 @@ int main(int argc, char* argv[])
   double* sortmin;
   double* sortmax;
   double* sortinc;
-  int numtracestosort;
-  int size_myarray_pointers_to_sortkey;
+  int n_traces_sort;
+  int n_pntrs_to_sortkeys;
   int i1_headers;
   int* indx_of_keys;
   int isortheader;
-  int bytes_in_my_sortkey;
+  int sizeof_my_sortkey;
   bool allzero;
   bool passrangetest;
   
@@ -228,7 +227,7 @@ int main(int argc, char* argv[])
 
   /* get the sort key */
   sort=sf_getstring("sort");
-  /* /n
+  /* \n
      list of the sort keys.  Each key must be a trace header key name.
      It may be preceeded with + (the default) for ascending or - for 
      descending sort direction.  The key may be followed with :min,max 
@@ -322,12 +321,10 @@ int main(int argc, char* argv[])
   for(isortheader=0; isortheader<numsortheadernames; isortheader++){
     indx_of_keys[isortheader]=segykey(sortheadernames[isortheader]);
   }
-  numtracestosort=0;
-  size_myarray_pointers_to_sortkey=100;
-  bytes_in_my_sortkey=2*sizeof(*myarray_pointers_to_sortkey)+
-                        sizeof(double)*(numsortheadernames-1);
-  myarray_pointers_to_sortkey=malloc(size_myarray_pointers_to_sortkey*
-                                     sizeof(myarray_pointers_to_sortkey));
+  n_traces_sort=0;
+  n_pntrs_to_sortkeys=1000;
+  sizeof_my_sortkey=sizeof(sortkey)+sizeof(double)*(numsortheadernames-1);
+  pntrs_to_sortkeys=(sortkey**)sf_alloc2(sizeof_my_sortkey,n_pntrs_to_sortkeys);
 
   if(verbose>0)fprintf(stderr,"start loop to read headers to build sort key\n");
   for (i_trace=0; i_trace<n_traces; i_trace++){
@@ -371,53 +368,52 @@ int main(int argc, char* argv[])
       }
     }
     if(false==passrangetest) continue; /* do not add header to list of keys
-                                          header is outsidd the sort ranges */
+                                          header is outside the sort ranges */
 			       
     /* add this trace to the headers to sort */
-    if(numtracestosort>=size_myarray_pointers_to_sortkey){
+    if(n_traces_sort>=n_pntrs_to_sortkeys){
       /* reallocate the array */
-      size_myarray_pointers_to_sortkey*=1.2;
-      myarray_pointers_to_sortkey=realloc(myarray_pointers_to_sortkey,
-	      size_myarray_pointers_to_sortkey*
-	         sizeof(myarray_pointers_to_sortkey));
+      n_pntrs_to_sortkeys*=1.2;
+      pntrs_to_sortkeys=(sortkey**)sf_realloc2((void**)pntrs_to_sortkeys,
+					       sizeof_my_sortkey,
+					       n_pntrs_to_sortkeys);
     }
-    myarray_pointers_to_sortkey[numtracestosort]=malloc(bytes_in_my_sortkey);
     for(isortheader=0; isortheader<numsortheadernames; isortheader++){
       if(typehead==SF_FLOAT)
-	myarray_pointers_to_sortkey[numtracestosort]->keyvalue[isortheader]=
+	pntrs_to_sortkeys[n_traces_sort]->keyvalue[isortheader]=
 	header[indx_of_keys[isortheader]];
       else
-	myarray_pointers_to_sortkey[numtracestosort]->keyvalue[isortheader]=
+	pntrs_to_sortkeys[n_traces_sort]->keyvalue[isortheader]=
 	  ((int*)header)[indx_of_keys[isortheader]];
       /* multiply header value by signsortkey to handle sort in decreasing 
 	 order */
-      myarray_pointers_to_sortkey[numtracestosort]->keyvalue[isortheader]*=
+      pntrs_to_sortkeys[n_traces_sort]->keyvalue[isortheader]*=
 	signsortname[isortheader];
     }
-    myarray_pointers_to_sortkey[numtracestosort]->tracenumber=i_trace;
-    myarray_pointers_to_sortkey[numtracestosort]->filenumber=0;
+    pntrs_to_sortkeys[n_traces_sort]->tracenumber=i_trace;
+    pntrs_to_sortkeys[n_traces_sort]->filenumber=0;
 
-    numtracestosort++;
+    n_traces_sort++;
   }
-  qsort(myarray_pointers_to_sortkey,numtracestosort,
-	sizeof(myarray_pointers_to_sortkey),qsort_compare);
+  qsort(pntrs_to_sortkeys,n_traces_sort,
+	sizeof(pntrs_to_sortkeys),qsort_compare);
   /* print the headers */
   if(verbose>3){
-    for(i_trace=0; i_trace<numtracestosort; i_trace++){
+    for(i_trace=0; i_trace<n_traces_sort; i_trace++){
       for(isortheader=0; isortheader<numsortheadernames; isortheader++){
 	fprintf(stderr,"%s = %f ",sortheadernames[isortheader],
-		myarray_pointers_to_sortkey[i_trace]->keyvalue[isortheader]);
+		pntrs_to_sortkeys[i_trace]->keyvalue[isortheader]);
       }
       fprintf(stderr,"tracenumber=%d ",
-	      myarray_pointers_to_sortkey[i_trace]->tracenumber);
+	      pntrs_to_sortkeys[i_trace]->tracenumber);
       fprintf(stderr,"filenumber=%d ",
-	      myarray_pointers_to_sortkey[i_trace]->filenumber);
+	      pntrs_to_sortkeys[i_trace]->filenumber);
       fprintf(stderr,"\n");
     }
   }
 
   if(verbose>0)fprintf(stderr,"start read trace loop n_traces=%d\n",n_traces);
-  for (i_trace=0; i_trace<numtracestosort; i_trace++){
+  for (i_trace=0; i_trace<n_traces_sort; i_trace++){
     off_t file_tracenum;
     if(verbose>2 ||(verbose>0 && i_trace<5)){
       fprintf(stderr,"i_trace=%d\n",i_trace);
@@ -426,7 +422,7 @@ int main(int argc, char* argv[])
     /**************************/
     /* read trace and headers */
     /**************************/
-    file_tracenum=myarray_pointers_to_sortkey[i_trace]->tracenumber;
+    file_tracenum=pntrs_to_sortkeys[i_trace]->tracenumber;
 
     sf_seek(inheaders,  file_tracenum*n1_headers*sizeof(float),  SEEK_SET);
     sf_floatread(header,n1_headers,inheaders);

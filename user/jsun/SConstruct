@@ -2,15 +2,23 @@ import os, sys, re, string
 sys.path.append('../../framework')
 import bldutil
 
-progs = '''
-wcfftexp2
-'''
+progs = 'fftwave1dd cfftwave1dd cfftwave1in fftwave2p fftwave3p cfftwave2 cfftwave3 cfftexpmig2 fftexp0test fd2d cfftexp2 cfftexp2test fdtacc wcfftexp2 wcfftexp2adj cfftwave2nsps cfftwave2mix2 wavemixop lrosrtm2 lroslsrtm2 stack2d cstack2d fftexp0test lrlsrtm2mpi imagsrc zolsrtm2 initwave2 correctwave2 lrwave2 cmatrix cfftwave1d zortmgmres'
+# pawave2 cpawave2 cpswave2
+# cfftwave2dhalfft
+# icfftwave2 cfftwave1dtest cfftwave2test
+# cfftwave1dinit cfftwave2nspstest
+# cfftwave2tt lasthope cfftwave2one waveadjtest cfftwave2abc fftwave2abc
 
-ccprogs = '''
-cisolr2
-'''
+ccprogs = 'tilr2 ortholr3 cortholr3 cisolr2 cisolr2rev cisolr3 ctilr2 cisolr2grad cisolr2abc cisolr2abc1 cisolr1 canisolr2 canisolr2abc fraclr2 fraclr2test tilrzone ortholrzone'
+# abclr2 isolr2sta isolr2abc  cfraclr2
+# eiktest eiktest2 cisolr1eik eiksol cfraclr2 rfraclr2 cisolr2twostep
+# cisolr2hyb icisolr2
 
-mpi_progs = ''
+mpi_progs = 'mpilsrtm'
+
+pyprogs = 'fft'
+pymods = ''
+
 
 try:  # distributed version
     Import('env root pkgdir bindir libdir incdir')
@@ -26,11 +34,9 @@ env.Prepend(CPPPATH=['../../include'],
             LIBPATH=['../../lib'],
             LIBS=[env.get('DYNLIB','')+'rsf'])
 
-fftw = env.get('FFTW')
+fftw = env.get('FFTWOMP')
 if fftw:
     env.Prepend(CPPDEFINES=['SF_HAS_FFTW'])
-    if not isinstance(fftw,bool):
-        env.Append(LIBS=['fftw3_threads','fftw3'])
 
 for source in src:
     inc = env.RSF_Include(source,prefix='')
@@ -78,6 +84,15 @@ for prog in ccmains:
         prog = env.RSF_Place('sf'+prog,None,var='LAPACK',package='lapack')
     if root:
         env.Install(bindir,prog)
+
+for prog in Split('cmatmult2'):
+    sources = ['Test' + prog,prog]
+    if prog=='cmatmult2':
+        sources.append('cgmres')
+    bldutil.depends(env,sources,prog)
+    sources = map(lambda x: x + '.o',sources)
+    env.Object('Test' + prog + '.c')
+    env.Program(sources,PROGPREFIX='',PROGSUFFIX='.x')
 
 ######################################################################
 # SELF-DOCUMENTATION

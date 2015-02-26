@@ -773,6 +773,6 @@ void fkoclet_lop(bool adj, bool add, int nx, int ny,
 	}
     } 
 }
-/* 	$Id: fkoclet.c 12369 2014-05-04 11:40:50Z sfomel $	 */
+/* 	$Id: fkoclet.c 12370 2014-05-04 11:49:34Z sfomel $	 */
 
 

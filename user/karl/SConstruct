@@ -23,17 +23,31 @@ tahstack
 tahsort
 tahscscale
 lintshape2d
+tah5dinterp
+karlistinterp
+karlpocs
+tahmakeevent
+tahheadermath
+make_ix_indx
+tahmute
+tahremoveclick
+tahgain
+tahfilter
 '''
-
-src = Glob('[a-z]*.c')
 
 env.Prepend(CPPPATH=[RSFSRC+'/include'],
             LIBPATH=[RSFSRC+'/lib'],
             LIBS=[env.get('DYNLIB','')+'rsfsegy',
                   env.get('DYNLIB','')+'su',
                   env.get('DYNLIB','')+'rsf'])
+# fftw settings
+fftw = env.get('FFTW')
+if fftw:
+    env.Prepend(CPPDEFINES=['SF_HAS_FFTW'])
 
-for source in src:
+src = Glob('[a-z]*.c')
+
+for source in Split(src):
     inc = env.RSF_Include(source,prefix='')
     obj = env.StaticObject(source)
     env.Depends(obj,inc)
@@ -42,7 +56,11 @@ mains = Split(progs)
 for prog in mains:
     sources = ['M' + prog]
     bldutil.depends(env,sources,'M'+prog)
-    prog = env.Program(prog,map(lambda x: x + '.c',sources))
+    env.StaticObject('M'+prog+'.c')
+    if not fftw and prog in Split('karlistinterp karlpocs'):
+        prog = env.RSF_Place('sf'+prog,None,var='FFTW',package='fftw-devel')
+    else:
+        prog = env.Program(prog,map(lambda x: x + '.o',sources))
     if root:
         env.Install(bindir,prog)
 

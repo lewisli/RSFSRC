@@ -3,9 +3,12 @@ sys.path.append('../../framework')
 import bldutil
 
 progs = '''
-stackn zerocross
+convft corrft stackn zerocross
 '''
  
+#pyprogs = 'fft rcat results zoom'
+#pymods = 'dottest conjgrad'
+
 try:  # distributed version
     Import('env root pkgdir bindir')
     env = env.Clone()

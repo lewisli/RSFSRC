@@ -3,7 +3,8 @@ sys.path.append('../../framework')
 import bldutil
 
 progs = '''
-ScanCoef awefd2dds awefd2dds2nd eikEta eikds wkbjTI
+awefd2dds awefd2dds2nd awefd2ddshomo awefd2dds2ndhomo awefd2ddsV awefd2dds2ndV
+eikds eikEta eikvti wkbjTI ScanCoef
 '''
 
 try:  # distributed version

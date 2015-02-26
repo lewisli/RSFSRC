@@ -1,4 +1,8 @@
-/* 2-D synthetic model from J.F.Claerbout. */
+/* 2-D synthetic model from J.F.Claerbout. 
+
+October 2014 program of the month:
+http://ahay.org//rsflog/index.php?/archives/404-Program-of-the-month-sfsigmoid.html
+*/
 /*
   Copyright (C) 2004 University of Texas at Austin
   
@@ -176,4 +180,4 @@ int main (int argc, char* argv[])
     exit (0);
 }
 
-/* 	$Id: Msigmoid.c 7107 2011-04-10 02:04:14Z ivlad $	 */
+/* 	$Id: Msigmoid.c 13370 2014-10-09 03:00:06Z sfomel $	 */

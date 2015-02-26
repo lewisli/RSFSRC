@@ -1,4 +1,8 @@
-/* Fast marching eikonal solver (3-D). */
+/* Fast marching eikonal solver (3-D). 
+
+June 2014 program of the month:
+http://ahay.org/rsflog/index.php?/archives/392-Program-of-the-month-sfeikonal.html
+*/
 /*
   Copyright (C) 2004 University of Texas at Austin
   
@@ -151,4 +155,4 @@ int main (int argc,char* argv[])
     exit (0);
 }
 
-/* 	$Id: Meikonal.c 7107 2011-04-10 02:04:14Z ivlad $	 */
+/* 	$Id: Meikonal.c 12827 2014-06-12 04:04:58Z sfomel $	 */

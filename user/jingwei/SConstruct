@@ -4,11 +4,12 @@ import bldutil
 
 # C++ programs
 progs = '''
-adiradon2 diiradon2 diradon2 diradon32 radon2 radon32 sum
+radon2 radon3 radon32 apradon2 radon34 diradon2 diiradon2 adiradon2 diradon32 diradon3 diradon34 sum sum3 sthres rankonetest svdtest samplowmat
 '''
 
 # C++ programs calling subC programs
 sprogs = '''
+pseudo adjtest adjtest1 samptest sampmat invtest invtest1 pseudolrexp samptestlrexp
 '''
 
 # subC++ programs
@@ -18,6 +19,7 @@ bfio bfio_eval2 bfio_eval3 bfio_apeval2 bfio_eval34 rankoneapprox
 
 # C programs
 cprogs = '''
+inmo3_ort
 '''
 
 try:  # distributed version
@@ -67,20 +69,20 @@ for prog in mains:
         prog = env.RSF_Place('sf'+prog,None,var='LAPACK',package='lapack')
     if root:
         env.Install(bindir,prog)
-
-if root:
-    env.Install(incdir,'bfio.bin')
+        env.Install(incdir,'bfio.bin')
 
 smains = Split(sprogs)
 for sprog in smains:
     if lapack:
-        sprog = env.Program(sprog,['M'+sprog+'.cc']+env.Object("prop1.c")+env.Object("prop2.c")+env.Object("prop3.c")+env.Object("prop4.c")+env.Object("prop1P.c")+env.Object("prop1Pa.c")+env.Object("prop2N.c")+env.Object("prop2Na.c")+env.Object("cfft2nsps.c")+[lib])
+        sprog = env.Program(sprog,['M'+sprog+'.cc']+env.Object("prop1.c")+env.Object("prop2.c")+env.Object("prop3.c")+env.Object("prop4.c")+env.Object("prop1P.c")+env.Object("prop1Pa.c")+env.Object("prop2N.c")+env.Object("prop2Na.c")+env.Object("cfft2nsps.c")+env.Object("lrexp.c")+[lib])
         env.Depends(sprog,ccinc)
     else:
         sprog = env.RSF_Place('sf'+sprog,None,var='LAPACK',package='lapack')
     if root:
         env.Install(bindir,sprog)
-        env.Install(incdir,'bfio.bin')
+
+if root:
+    env.Install(incdir,'bfio.bin')
 
 
 cmains = Split(cprogs)

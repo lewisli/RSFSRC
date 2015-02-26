@@ -3,9 +3,16 @@ sys.path.append('../../framework')
 import bldutil
 
 progs = '''
-dsreiko dsreiko0 dsrtomo eikods fatomoomp ftoper kirdatsr kirmig0
-kirmigsr kkirmig kkirmig0 lineiko mkrcv tinterp
+kirmig kirmig0 drayinte lineiko
+testanal gradient cconst cgconst
+fatomo fatomoomp mkrcv cpxeikonal
+drays dsreiko dsrtomo eikods tinterp
+tdconvert irays t2diter kirdat0 kirdat
+kirmigsr kirdatsr ftoper dsreiko0
+iwipert dsrtomo0 
 '''
+
+# freqmig0
 
 try:  # distributed version
     Import('env root pkgdir libdir bindir')
